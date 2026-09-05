@@ -1,84 +1,84 @@
-# B2B SaaS Customer Onboarding Causal Analysis
+# Análisis Causal de Onboarding en Clientes SaaS B2B
 
-## Executive Summary
-Using a balanced longitudinal panel of 100 enterprise accounts tracked over three fiscal years (2023–2025), this project evaluates the causal impact of subsidized technical onboarding programs on software adoption. Applying modern Staggered Difference-in-Differences (Callaway & Sant'Anna) with Doubly Robust estimation, the analysis reveals a massive immediate lift (+34.3 training hours/employee) during the subsidized year that completely decays to zero post-subsidy, demonstrating that subsidies accelerate short-term usage without creating autonomous long-term adoption habits.
+## Resumen Ejecutivo
+Utilizando un panel longitudinal balanceado de 100 cuentas corporativas monitoreadas a lo largo de tres ejercicios fiscales (2023–2025), este proyecto evalúa el impacto causal de programas bonificados de onboarding técnico en la adopción de software. Mediante la metodología moderna de Diferencias en Diferencias Escalonado (Callaway & Sant'Anna) con estimación Doblemente Robusta, el análisis evidencia un incremento inmediato masivo (+34.3 horas de capacitación/empleado) durante el año subsidiado que se disipa por completo a cero tras finalizar el beneficio, demostrando que el subsidio acelera el uso inmediato pero no genera hábitos autónomos de adopción a largo plazo.
 
-## 1. Business Case
+## 1. Caso de Negocio
 
-CloudMetrics, a B2B SaaS company specializing in enterprise analytics and operations infrastructure, observed persistent adoption bottlenecks among mid-market and enterprise clients. To accelerate time-to-value and ensure technical embedding, the Customer Success leadership launched a high-touch intervention: **a fully subsidized, 12-month Dedicated Technical Onboarding program**.
+CloudMetrics, una compañía SaaS B2B especializada en analítica e infraestructura de operaciones corporativas, identificó cuellos de botella persistentes en la adopción técnica entre sus clientes de medianas y grandes empresas. Para acelerar el valor percibido y garantizar la integración del software en los flujos diarios, la gerencia de Customer Success implementó una intervención de alto contacto: **un programa anual bonificado de Onboarding y Acompañamiento Técnico Dedicado**.
 
-Due to capacity and staffing constraints within the Customer Success engineering team, the program was rolled out across accounts in staggered cohorts:
-- **2023 (Baseline)**: Pure organic baseline; no enterprise accounts received dedicated onboarding.
-- **2024 (Cohort 2024)**: First cohort of accounts enrolled in the subsidized onboarding program.
-- **2025 (Cohort 2025)**: Second cohort of accounts enrolled in the subsidized onboarding program.
-- **Never-Treated (Control)**: Accounts that relied strictly on standard self-serve technical documentation.
+Por restricciones de capacidad operativa y técnica dentro del equipo de consultores, el despliegue del programa se realizó de forma escalonada entre diferentes cohortes de cuentas:
+- **2023 (Línea Base)**: Nivel basal orgánico puro; ninguna cuenta corporativa recibió acompañamiento dedicado.
+- **2024 (Cohorte 2024)**: Primera cohorte de cuentas en incorporarse al programa de onboarding bonificado.
+- **2025 (Cohorte 2025)**: Segunda cohorte de cuentas en incorporarse al programa de onboarding bonificado.
+- **Control Puro (Nunca Tratados)**: Cuentas que dependieron exclusivamente del autoservicio y la documentación técnica estándar.
 
-The executive team needs data-driven causal answers to two strategic questions:
-- **Q1**: Did the subsidized onboarding program causally increase employee technical engagement and adoption?
-- **Q2**: Does this adoption effect persist once the 12-month subsidy expires, or does engagement collapse back to baseline?
+La dirección ejecutiva requiere respuestas causales rigurosas a dos preguntas clave de negocio:
+- **P1**: ¿El programa de onboarding bonificado aumentó de forma causal la capacitación y adopción técnica de los empleados?
+- **P2**: ¿El efecto de adopción persiste una vez concluido el año bonificado, o el compromiso colapsa regresando a la línea base?
 
-## 2. Data Structure
+## 2. Estructura de Datos
 
-The analysis leverages a balanced panel of **100 corporate accounts** tracked consecutively over **3 fiscal periods (300 total observations)** stored in `data/saas_b2b_onboarding.csv`.
+El análisis se basa en un panel balanceado de **100 cuentas corporativas** seguidas consecutivamente a lo largo de **3 periodos fiscales (300 observaciones en total)** almacenadas en `data/saas_b2b_onboarding.csv`.
 
-Here is a glimpse of the enterprise panel structure:
+A continuación se presenta una muestra de la estructura del panel empresarial:
 
-![image alt](https://github.com/GeorgeWLZD/saas_onboarding_did/blob/main/img/data_glimpse.png)
+![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/data_glimpse.png)
 
-### Key Variables
-- `id_cuenta_cliente`: Unique identifier for each enterprise account.
-- `periodo_fiscal`: Fiscal year of observation (2023, 2024, 2025).
-- `onboarding_bonificado`: Binary treatment indicator (1 if subsidized onboarding is active in that period, 0 otherwise).
-- `horas_capacitacion_empleado`: Primary outcome metric ($Y$) measuring average annual technical training hours completed per licensed employee.
-- `usuarios_licenciados`: Total seat license count, controlling for organizational scale.
-- `facturacion_anual_cliente`: Total annual contract/sales volume, controlling for customer baseline financial size.
+### Variables Principales
+- `id_cuenta_cliente`: Identificador único para cada cuenta corporativa.
+- `periodo_fiscal`: Ejercicio fiscal de observación (2023, 2024, 2025).
+- `onboarding_bonificado`: Indicador binario de tratamiento (1 si la cuenta cuenta con onboarding activo ese año, 0 en caso contrario).
+- `horas_capacitacion_empleado`: Métrica de resultado principal ($Y$) que mide las horas anuales promedio de entrenamiento técnico completadas por empleado licenciado.
+- `usuarios_licenciados`: Total de licencias contratadas, como variable de control por escala organizacional.
+- `facturacion_anual_cliente`: Nivel de facturación/ventas de la empresa cliente, como control por capacidad económica previa.
 
-## 3. Econometric Methodology & Diagnostics
+## 3. Metodología Econométrica y Diagnósticos
 
-Because rollouts happened at different times and account enrollment was not purely random, traditional Two-Way Fixed Effects (TWFE) OLS regressions produce negative weighting biases. I implemented the **Callaway & Sant'Anna (2021) Staggered Difference-in-Differences** estimator with Doubly Robust (`dr`) estimation.
+Dado que el despliegue ocurrió en momentos temporales distintos y la asignación de cuentas no fue puramente aleatoria, los modelos lineales tradicionales de Efectos Fijos Bidireccionales (TWFE) generan sesgos por ponderaciones negativas. Se implementó el estimador de **Diferencias en Diferencias Escalonado de Callaway & Sant'Anna (2021)** bajo el método Doblemente Robusto (`dr`).
 
-### Propensity Score Overlap & Covariate Balance (2023 Baseline)
-To correct for selection bias (larger or higher-revenue accounts entering the pilot earlier), a baseline logistic regression estimated the Propensity Score across 2023 pre-treatment covariates.
+### Soporte Común del Propensity Score y Balance de Covariables (Línea Base 2023)
+Para corregir el sesgo de selección inicial (cuentas más grandes o con mayor facturación ingresando primero al programa), se estimó una regresión logística para calcular el *Propensity Score* a partir de los datos basales de 2023.
 
-Inverse Probability Weighting (IPW) was computed to verify the common support assumption between future treated accounts and never-treated accounts:
+Se calcularon ponderadores por el inverso de la probabilidad de tratamiento (IPW) para validar el supuesto de soporte común (*overlap*) entre las cuentas tratadas a futuro y las que nunca recibieron el programa:
 
-![image alt](https://github.com/GeorgeWLZD/saas_onboarding_did/blob/main/img/overlap_pscore.png)
+![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/overlap_pscore.png)
 
-Balance diagnostics confirmed high comparability across groups post-weighting:
-- **Standardized Mean Difference (SMD) - Licensed Users**: 0.048 (< 0.1 threshold)
-- **Standardized Mean Difference (SMD) - Client Revenue**: 0.062 (< 0.1 threshold)
+Las pruebas diagnósticas confirmaron un balance adecuado entre los grupos post-ponderación:
+- **Diferencia de Medias Estandarizada (SMD) - Usuarios Licenciados**: 0.048 (inferior al umbral de 0.1)
+- **Diferencia de Medias Estandarizada (SMD) - Facturación del Cliente**: 0.062 (inferior al umbral de 0.1)
 
-## 4. Empirical Results
+## 4. Resultados Empíricos
 
-### Raw Trend Trajectories by Rollout Cohort
-Aggregating unadjusted average training hours by rollout group illustrates the underlying trajectory and immediate adoption response:
+### Evolución de Tendencias Observadas por Cohorte
+Al calcular el promedio de horas de capacitación por cohorte en su escala original, se observa el comportamiento del panel antes y después de cada despliegue:
 
-![image alt](https://github.com/GeorgeWLZD/saas_onboarding_did/blob/main/img/parallel_trends_cohorts.png)
+![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/parallel_trends_cohorts.png)
 
-Both cohorts mirror the flat, stable pattern of the never-treated group prior to their respective intervention years, supporting the plausibility of the parallel trends assumption.
+Ambas cohortes de intervención siguen un comportamiento estable y paralelo al grupo de control puro antes de ingresar al programa, respaldando la plausibilidad del supuesto de tendencias paralelas.
 
-### Dynamic Event Study Estimation
-Using `aggte(type = "dynamic")`, account timelines were realigned around relative event time ($e = 0$, the year dedicated onboarding goes live):
+### Estimación Dinámica (Estudio de Eventos)
+Mediante la función `aggte(type = "dynamic")`, las trayectorias de las cuentas se alinearon en una escala de tiempo relativo al tratamiento ($e = 0$, el año en que inicia el onboarding bonificado):
 
-![image alt](https://github.com/GeorgeWLZD/saas_onboarding_did/blob/main/img/event_study_did.png)
+![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/event_study_did.png)
 
-| Relative Time ($e$) | Interpretation | ATT Estimate | Std. Error | 95% Confidence Interval | Statistically Significant |
+| Tiempo Relativo ($e$) | Interpretación | Estimación ATT | Error Estándar | Intervalo de Confianza al 95% | Significancia Estadística |
 | :---: | :--- | :---: | :---: | :---: | :---: |
-| **$e = -1$** | Pre-treatment Baseline Validation | **-0.85** | 1.82 | [-4.41, 2.71] | No ($p > 0.05$) |
-| **$e = 0$** | Immediate Onboarding Year Impact | **+34.28** | 4.15 | [26.15, 42.41] | Yes ($p < 0.001$) |
-| **$e = +1$** | Post-Subsidy Retention (Year 2) | **-1.42** | 2.94 | [-7.18, 4.34] | No ($p > 0.05$) |
+| **$e = -1$** | Validación de Tendencias Previas | **-0.85** | 1.82 | [-4.41, 2.71] | No ($p > 0.05$) |
+| **$e = 0$** | Impacto Inmediato del Onboarding | **+34.28** | 4.15 | [26.15, 42.41] | Sí ($p < 0.001$) |
+| **$e = +1$** | Retención Post-Subsidio (Año 2) | **-1.42** | 2.94 | [-7.18, 4.34] | No ($p > 0.05$) |
 
-### Core Empirical Findings
-- **Pre-trends Validation ($e = -1$)**: The treatment effect prior to rollout is statistically indistinguishable from zero, confirming that accounts were not already trending upward before the onboarding pilot.
-- **Immediate Adoption Shock ($e = 0$)**: Subsidized onboarding delivers an average boost of **+34.28 training hours per employee**, showing heavy client participation while professional services are actively provided.
-- **Post-Subsidy Collapse ($e = +1$)**: One year after the subsidy expires, the incremental effect drops to **-1.42 hours** (statistically zero). Accounts immediately revert to self-serve consumption rates rather than maintaining autonomous training routines.
+### Conclusiones de los Resultados
+- **Validación de Pre-tendencias ($e = -1$)**: El efecto causal antes de la intervención es indistinguible de cero, demostrando que las cuentas tratadas no presentaban un crecimiento previo artificial frente al control.
+- **Impacto Inmediato ($e = 0$)**: El onboarding bonificado genera un incremento de **+34.28 horas de entrenamiento por empleado**, confirmando una alta adopción operativa mientras la consultoría es bonificada al 100%.
+- **Desvanecimiento Post-Programa ($e = +1$)**: Un año después, al vencer la bonificación, el efecto incremental colapsa a **-1.42 horas** (estadísticamente nulo). Las cuentas regresan de forma inmediata a los niveles basales del grupo sin intervención, en lugar de sostener rutinas internas autónomas.
 
-## 5. Business Recommendations
+## 5. Recomendaciones de Negocio
 
-- **Transition Away from Full Subsidies to Shared-Cost Models**: Providing 100% free onboarding creates artificial engagement that fails to build internalized corporate habits. Implement a co-investment structure (e.g., 50% platform match) to select accounts genuinely committed to operational adoption.
+- **Migrar de Subsidios Totales a Modelos de Co-inversión**: Entregar servicios 100% gratuitos infla artificialmente el uso inmediato sin crear hábitos sostenibles. Diseñar esquemas de cofinanciamiento (por ejemplo, cobertura del 50% por parte del cliente) ayuda a filtrar cuentas con un compromiso genuino de integración técnica.
 
-- **Embed Workflow Automation Rather Than Human-Assisted Handholding**: Because dedicated consulting hours do not leave a lasting footprint, shift product development toward in-app interactive guidance, automated milestones, and role-based certifications that run independently of human consultants.
+- **Priorizar la Automatización en el Producto sobre el Acompañamiento Manual**: Dado que el soporte humano no deja un impacto duradero tras retirarse, conviene dirigir los esfuerzos hacia guías interactivas integradas en la interfaz, hitos guiados por el sistema y rutas de certificación por rol operadas de manera autónoma.
 
-- **Introduce Gradual Ramp-Down Milestones at Month 9**: The immediate collapse in year two indicates a cliff effect when consulting contracts terminate. Establish transition playbooks in the final quarter of year one to hand off governance directly to client-side internal champions.
+- **Establecer un Plan de Transición Gradual a Partir del Mes 9**: La caída abrupta en el segundo año muestra un efecto precipicio al terminarse el contrato de consultoría. Implementar un protocolo de traspaso en el último trimestre para transferir formalmente la responsabilidad técnica a líderes internos de la empresa cliente.
 
-- **Tie Customer Success Compensation to Post-Onboarding Retention**: Realign CSM metrics so bonuses are contingent on sustained platform usage at month 18 and month 24, disincentivizing short-term usage inflation during the subsidized window.
+- **Alinear los Incentivos de Customer Success a la Retención a Largo Plazo**: Estructurar los objetivos de los consultores y CSMs en función de la actividad en la plataforma al mes 18 y 24, desincentivando el consumo acelerado enfocado únicamente en la ventana del primer año.

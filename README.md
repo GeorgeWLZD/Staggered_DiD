@@ -23,7 +23,7 @@ El análisis se basa en un panel balanceado de **100 cuentas corporativas** segu
 
 A continuación se presenta una muestra de la estructura del panel empresarial:
 
-![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/data_glimpse.png)
+![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/01a55b06dc7307e955337b4f792a188172ab52cf/img/head.png)
 
 ### Variables Principales
 - `id_cuenta_cliente`: Identificador único para cada cuenta corporativa.
@@ -45,8 +45,8 @@ Se calcularon ponderadores por el inverso de la probabilidad de tratamiento (IPW
 ![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/overlap_pscore.png)
 
 Las pruebas diagnósticas confirmaron un balance adecuado entre los grupos post-ponderación:
-- **Diferencia de Medias Estandarizada (SMD) - Usuarios Licenciados**: 0.048 (inferior al umbral de 0.1)
-- **Diferencia de Medias Estandarizada (SMD) - Facturación del Cliente**: 0.062 (inferior al umbral de 0.1)
+- **Diferencia de Medias Estandarizada (SMD) - Usuarios Licenciados**: 0.0126 (inferior al umbral de 0.1)
+- **Diferencia de Medias Estandarizada (SMD) - Facturación del Cliente**: 0.0736 (inferior al umbral de 0.1)
 
 ## 4. Resultados Empíricos
 
@@ -57,21 +57,21 @@ Al calcular el promedio de horas de capacitación por cohorte en su escala origi
 
 Ambas cohortes de intervención siguen un comportamiento estable y paralelo al grupo de control puro antes de ingresar al programa, respaldando la plausibilidad del supuesto de tendencias paralelas.
 
-### Estimación Dinámica (Estudio de Eventos)
+### Estimación Dinámica
 Mediante la función `aggte(type = "dynamic")`, las trayectorias de las cuentas se alinearon en una escala de tiempo relativo al tratamiento ($e = 0$, el año en que inicia el onboarding bonificado):
 
 ![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/event_study_did.png)
 
 | Tiempo Relativo ($e$) | Interpretación | Estimación ATT | Error Estándar | Intervalo de Confianza al 95% | Significancia Estadística |
 | :---: | :--- | :---: | :---: | :---: | :---: |
-| **$e = -1$** | Validación de Tendencias Previas | **-0.85** | 1.82 | [-4.41, 2.71] | No ($p > 0.05$) |
-| **$e = 0$** | Impacto Inmediato del Onboarding | **+34.28** | 4.15 | [26.15, 42.41] | Sí ($p < 0.001$) |
-| **$e = +1$** | Retención Post-Subsidio (Año 2) | **-1.42** | 2.94 | [-7.18, 4.34] | No ($p > 0.05$) |
+| **$e = -1$** | Validación de Tendencias Previas | **4.24** | 2.70 | [-1.67, 10.15] | No ($p > 0.05$) |
+| **$e = 0$** | Impacto Inmediato del Onboarding | **33.96** | 4.35 | [24.43, 43.49] | Sí ($p < 0.001$) |
+| **$e = +1$** | Retención Post-Subsidio (Año 2) | **-1.46** | 4.10 | [-10.44, 7.51] | No ($p > 0.05$) |
 
 ### Conclusiones de los Resultados
 - **Validación de Pre-tendencias ($e = -1$)**: El efecto causal antes de la intervención es indistinguible de cero, demostrando que las cuentas tratadas no presentaban un crecimiento previo artificial frente al control.
-- **Impacto Inmediato ($e = 0$)**: El onboarding bonificado genera un incremento de **+34.28 horas de entrenamiento por empleado**, confirmando una alta adopción operativa mientras la consultoría es bonificada al 100%.
-- **Desvanecimiento Post-Programa ($e = +1$)**: Un año después, al vencer la bonificación, el efecto incremental colapsa a **-1.42 horas** (estadísticamente nulo). Las cuentas regresan de forma inmediata a los niveles basales del grupo sin intervención, en lugar de sostener rutinas internas autónomas.
+- **Impacto Inmediato ($e = 0$)**: El onboarding bonificado genera un incremento de **+33.96 horas de entrenamiento por empleado**, confirmando una alta adopción operativa mientras la consultoría es bonificada al 100%.
+- **Desvanecimiento Post-Programa ($e = +1$)**: Un año después, al vencer la bonificación, el efecto incremental colapsa a **-1.46 horas** (estadísticamente nulo). Las cuentas regresan de forma inmediata a los niveles base del grupo sin intervención, en lugar de sostener rutinas internas autónomas.
 
 ## 5. Recomendaciones de Negocio
 

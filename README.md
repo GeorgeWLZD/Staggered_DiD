@@ -60,6 +60,8 @@ Mediante la función `aggte(type = "dynamic")`, las trayectorias de las cuentas 
 
 ![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/6564dd43de34618e9a30abcbf5435a01235c8a54/img/estimacion.png)
 
+Los resultados estadísticos se muestran en la tabla:
+
 | Tiempo Relativo ($e$) | Interpretación | Estimación ATT | Error Estándar | Intervalo de Confianza al 95% | Significancia Estadística |
 | :---: | :--- | :---: | :---: | :---: | :---: |
 | **$e = -1$** | Validación de Tendencias Previas | **4.24** | 2.70 | [-1.67, 10.15] | No ($p > 0.05$) |

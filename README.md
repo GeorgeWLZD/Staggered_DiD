@@ -80,5 +80,3 @@ Los resultados estadísticos se muestran en la tabla:
 - **Priorizar la Automatización en el Producto sobre el Acompañamiento Manual**: Dado que el soporte humano no deja un impacto duradero tras retirarse, conviene dirigir los esfuerzos hacia guías interactivas integradas en la interfaz, hitos guiados por el sistema y rutas de certificación por rol operadas de manera autónoma.
 
 - **Establecer un Plan de Transición Gradual a Partir del Mes 9**: La caída abrupta en el segundo año muestra un efecto precipicio al terminarse el contrato de consultoría. Implementar un protocolo de traspaso en el último trimestre para transferir formalmente la responsabilidad técnica a líderes internos de la empresa cliente.
-
-- **Alinear los Incentivos de Customer Success a la Retención a Largo Plazo**: Estructurar los objetivos de los consultores y CSMs en función de la actividad en la plataforma al mes 18 y 24, desincentivando el consumo acelerado enfocado únicamente en la ventana del primer año.

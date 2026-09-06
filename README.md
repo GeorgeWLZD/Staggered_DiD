@@ -33,7 +33,7 @@ A continuación se presenta una muestra de la estructura del panel empresarial:
 - `usuarios_licenciados`: Total de licencias contratadas, como variable de control por escala organizacional.
 - `facturacion_anual_cliente`: Nivel de facturación/ventas de la empresa cliente, como control por capacidad económica previa.
 
-## 3. Resultados de la Inferencia Causal
+## 3. Resultados de Staggered DiD
 
 Dado que el despliegue ocurrió en momentos temporales distintos y la asignación de cuentas no fue puramente aleatoria, los modelos lineales tradicionales de Efectos Fijos Bidireccionales (TWFE) generan sesgos por ponderaciones negativas. Se implementó el estimador de **Diferencias en Diferencias Escalonado de Callaway & Sant'Anna (2021)** bajo el método Doblemente Robusto (`dr`).
 

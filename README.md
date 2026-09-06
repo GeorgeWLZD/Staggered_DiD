@@ -33,7 +33,7 @@ A continuación se presenta una muestra de la estructura del panel empresarial:
 - `usuarios_licenciados`: Total de licencias contratadas, como variable de control por escala organizacional.
 - `facturacion_anual_cliente`: Nivel de facturación/ventas de la empresa cliente, como control por capacidad económica previa.
 
-## 3. Metodología Econométrica y Diagnósticos
+## 3. Resultados de la Inferencia Causal
 
 Dado que el despliegue ocurrió en momentos temporales distintos y la asignación de cuentas no fue puramente aleatoria, los modelos lineales tradicionales de Efectos Fijos Bidireccionales (TWFE) generan sesgos por ponderaciones negativas. Se implementó el estimador de **Diferencias en Diferencias Escalonado de Callaway & Sant'Anna (2021)** bajo el método Doblemente Robusto (`dr`).
 
@@ -42,25 +42,23 @@ Para corregir el sesgo de selección inicial (cuentas más grandes o con mayor f
 
 Se calcularon ponderadores por el inverso de la probabilidad de tratamiento (IPW) para validar el supuesto de soporte común (*overlap*) entre las cuentas tratadas a futuro y las que nunca recibieron el programa:
 
-![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/overlap_pscore.png)
+![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/6564dd43de34618e9a30abcbf5435a01235c8a54/img/soporte_comun.png)
 
 Las pruebas diagnósticas confirmaron un balance adecuado entre los grupos post-ponderación:
 - **Diferencia de Medias Estandarizada (SMD) - Usuarios Licenciados**: 0.0126 (inferior al umbral de 0.1)
 - **Diferencia de Medias Estandarizada (SMD) - Facturación del Cliente**: 0.0736 (inferior al umbral de 0.1)
 
-## 4. Resultados Empíricos
-
 ### Evolución de Tendencias Observadas por Cohorte
 Al calcular el promedio de horas de capacitación por cohorte en su escala original, se observa el comportamiento del panel antes y después de cada despliegue:
 
-![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/parallel_trends_cohorts.png)
+![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/6564dd43de34618e9a30abcbf5435a01235c8a54/img/tendendecias_observadas.png)
 
 Ambas cohortes de intervención siguen un comportamiento estable y paralelo al grupo de control puro antes de ingresar al programa, respaldando la plausibilidad del supuesto de tendencias paralelas.
 
 ### Estimación Dinámica
 Mediante la función `aggte(type = "dynamic")`, las trayectorias de las cuentas se alinearon en una escala de tiempo relativo al tratamiento ($e = 0$, el año en que inicia el onboarding bonificado):
 
-![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/main/img/event_study_did.png)
+![image alt](https://github.com/GeorgeWLZD/Staggered_DiD/blob/6564dd43de34618e9a30abcbf5435a01235c8a54/img/estimacion.png)
 
 | Tiempo Relativo ($e$) | Interpretación | Estimación ATT | Error Estándar | Intervalo de Confianza al 95% | Significancia Estadística |
 | :---: | :--- | :---: | :---: | :---: | :---: |
@@ -73,7 +71,7 @@ Mediante la función `aggte(type = "dynamic")`, las trayectorias de las cuentas 
 - **Impacto Inmediato ($e = 0$)**: El onboarding bonificado genera un incremento de **+33.96 horas de entrenamiento por empleado**, confirmando una alta adopción operativa mientras la consultoría es bonificada al 100%.
 - **Desvanecimiento Post-Programa ($e = +1$)**: Un año después, al vencer la bonificación, el efecto incremental colapsa a **-1.46 horas** (estadísticamente nulo). Las cuentas regresan de forma inmediata a los niveles base del grupo sin intervención, en lugar de sostener rutinas internas autónomas.
 
-## 5. Recomendaciones de Negocio
+## 4. Recomendaciones de Negocio
 
 - **Migrar de Subsidios Totales a Modelos de Co-inversión**: Entregar servicios 100% gratuitos infla artificialmente el uso inmediato sin crear hábitos sostenibles. Diseñar esquemas de cofinanciamiento (por ejemplo, cobertura del 50% por parte del cliente) ayuda a filtrar cuentas con un compromiso genuino de integración técnica.
 

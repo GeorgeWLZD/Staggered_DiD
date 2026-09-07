@@ -8,11 +8,10 @@ Utilizando un panel longitudinal balanceado de 100 cuentas corporativas monitore
 CloudMetrics, una compañía SaaS B2B especializada en analítica e infraestructura de operaciones corporativas, identificó cuellos de botella persistentes en la adopción técnica entre sus clientes de medianas y grandes empresas. Para acelerar el valor percibido y garantizar la integración del software en los flujos diarios, la gerencia de Customer Success implementó una intervención de alto contacto: **un programa anual bonificado de Onboarding y Acompañamiento Técnico Dedicado**.
 
 Por restricciones de capacidad operativa y técnica dentro del equipo de consultores, el despliegue del programa se realizó de forma escalonada entre diferentes cohortes de cuentas:
-- **2023 (Línea Base)**: Nivel basal orgánico puro; ninguna cuenta corporativa recibió acompañamiento dedicado.
+- **2023 (Línea Base)**: Nivel base orgánico puro; ninguna cuenta corporativa recibió acompañamiento dedicado.
 - **2024 (Cohorte 2024)**: Primera cohorte de cuentas en incorporarse al programa de onboarding bonificado.
 - **2025 (Cohorte 2025)**: Segunda cohorte de cuentas en incorporarse al programa de onboarding bonificado.
-- **Control Puro (Nunca Tratados)**: Cuentas que dependieron exclusivamente del autoservicio y la documentación técnica estándar.
-
+  
 La dirección ejecutiva requiere respuestas causales rigurosas a dos preguntas clave de negocio:
 - **P1**: ¿El programa de onboarding bonificado aumentó de forma causal la capacitación y adopción técnica de los empleados?
 - **P2**: ¿El efecto de adopción persiste una vez concluido el año bonificado, o el compromiso colapsa regresando a la línea base?
